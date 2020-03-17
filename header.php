@@ -4,16 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-    <meta name="generator" content="Jekyll v3.8.6">
+
     <title>
+
     <?php if (isset($title)): ?>
         <?= $title ?>
     <?php else: ?>
         Liste de course
     <?php endif; ?>
+
     </title>
+    
+    <link rel="icon" href="" />
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.4/examples/starter-template/">
 
@@ -37,7 +39,6 @@
             }
         }
     </style>
-    <!-- Custom styles for this template -->
     <link href="starter-template.css" rel="stylesheet">
 </head>
 
@@ -58,6 +59,9 @@
                 </li>
                 <li class="nav-item <?php if ($_SERVER['SCRIPT_NAME'] === '/login.php'): ?>active<?php endif; ?>">
                     <a class="nav-link" href="/login.php">Se connecter</a>
+                </li>
+                <li class="nav-item <?php if ($_SERVER['SCRIPT_NAME'] === '/article_add.php'): ?>active<?php endif; ?>">
+                    <a class="nav-link" href="/article_add.php">Créer une liste</a>
                 </li>
             </ul>
         </div>
