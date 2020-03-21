@@ -1,5 +1,5 @@
 <?php 
-$title = 'Créer une liste';
+$title = 'Créer une nouvelle liste';
 include 'header.php'; 
 ?>
 
@@ -7,40 +7,59 @@ include 'header.php';
 
 <form action="" method="POST">
   <div class="form-group mt-4">
-    <label for="exampleInputEmail1">Titre</label>
+    <label for="exampleInputEmail1">Titre *</label>
     <input type="text" class="form-control" name="title" aria-describedby="emailHelp" required>
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword1">Produits à acheter</label>
+    <label for="exampleInputPassword1">Produits à acheter *</label>
     <textarea class="form-control" name="products" rows="3" required></textarea>
   </div>
   <div class="form-group">
     <label for="exampleInputPassword1">Commentaires</label>
-    <input type="text" class="form-control" name="comments">
+    <input type="text" class="form-control" name="comments" aria-describedby="emailHelp">
   </div>
+  <p><small>* Champs obligatoires</small></p>
   <button type="submit" class="btn btn-info">Valider</button>
 </form>
 
 <?php 
 
-/**
- * 1. Connexion bdd
- */
+$title = null;
+if (isset($_POST['title'])) {
+    $title = htmlspecialchars($_POST['title']);
+}
+
+$products = null;
+if (isset($_POST['products'])) {
+  $products = htmlspecialchars($_POST['products']);
+}
+
+$comments = null;
+if (isset($_POST['comments'])) {
+  $comments = htmlspecialchars($_POST['comments']);
+}
+
 $pdo = new PDO('mysql:host=localhost;dbname=liste_course;charset=utf8', 'root', '', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+  PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+  PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 ]);
 
-/**
- * 2. Ajout du formulaire dans la bdd
- */
-$sql = "INSERT INTO content(title, products, comments)
-    VALUES (?,?,?)";
+$request = $pdo->prepare('INSERT INTO content(title_content, products_content, comments_content) VALUES(:title,:products,:comments)');
+// On lie les variables définie au-dessus au paramètres de la requête préparée
+$request->bindValue(':title', $title); 
+$request->bindValue(':products', $products);
+$request->bindValue(':comments', $comments);
+//On exécute la requête
+$request->execute();
 
-$stmt = mysqli_prepare($sql);
-
-$stmt->bind_param("sss", $_POST['title'], $_POST['products'], $_POST['comments']);
-
-$stmt->execute();
+if ($title && $products) {
+  ?> <div class="alert alert-success mt-3" role="alert">
+    La liste <strong><?php echo $title; ?></strong> à été créée !
+  </div> <?php
+} else {
+  ?> <div class="alert alert-danger mt-3" role="alert">
+  Erreur : Veuillez recommencer
+</div> <?php 
+}
 
 ?>
